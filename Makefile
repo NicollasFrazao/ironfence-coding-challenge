@@ -29,3 +29,6 @@ sh\:application:
 
 sh\:mysql:
 	./vendor/bin/sail exec mysql bash -c 'mysql -h ${DB_HOST} --port=${DB_PORT} -u ${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE}'
+
+npm:
+	npm install && npm run dev
