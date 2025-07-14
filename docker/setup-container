@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd /var/www/html
+
+echo "Executando migrations..."
+php artisan migrate
+
+echo "Iniciando o NPM..."
+npm install
+npm run dev
