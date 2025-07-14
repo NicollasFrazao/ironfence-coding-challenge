@@ -29,6 +29,18 @@ class Task extends Model
         'priority',
     ];
 
+    public static $select_status = [
+        'pending' => 'pending', 
+        'in_progress' => 'in_progress', 
+        'completed' => 'completed', 
+    ];
+    
+    public static $select_priority = [
+        'low' => 'low', 
+        'medium' => 'medium', 
+        'high' => 'high', 
+    ];
+
     /**
      * The attributes that should be cast.
      *

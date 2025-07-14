@@ -1,26 +1,45 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="content-wrapper kanban" style="margin-top: 0; margin-left: 0;">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h1>{{ __('Tarefas') }}</h1>
-                    </div>
-                    
-                    <div class="col-sm-6 d-none d-sm-block">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">{{ __('Tarefas') }}</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </section>
+@push('css')
+    <style>
+    </style>
+@endpush
 
-        <section class="content pb-3">
-            <div class="container-fluid h-100">
+@section('content-header')
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>{{ __('Tarefas') }}</h1>
+        </div>
+        
+        <div class="col-sm-6 d-none d-sm-block">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item active">{{ __('Tarefas') }}</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        &nbsp;
+    </div>
+
+    <div class="row">
+        @if (Route::has('tasks.create'))
+            <div class="col-2">
+                <a href="{{ route('tasks.create') }}">
+                    <button type="button" class="btn btn-success btn-block">
+                        <i class="fa fa-plus"></i> {{ __('tasks.create') }}
+                    </button>
+                </a>
+            </div>
+        @endif
+    </div>
+@endsection
+
+@section('content')
+    <div class="content-wrapper kanban" style="margin-top: 0 !important; margin-left: 0 !important;">
+        <section class="content pb-3" style="padding-left: 0;">
+            <div class="container-fluid h-100" style="padding-left: 0;">
                 <div class="card card-row card-secondary">
                     <div class="card-header">
                         <h3 class="card-title">Backlog</h3>

@@ -5,7 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ContactRequest extends FormRequest
+use App\Models\Task;
+
+class TaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,17 +27,20 @@ class ContactRequest extends FormRequest
         $contact_id = $this->route('contact')?->id ?? null;
 
         return [
-            'name' => 'required|min:6',
-            'email' => [
+            'description' => [
                 'required',
-                'email:rfc,dns',
-                Rule::unique('contacts')->ignore($contact_id),
             ],
-            'phone' => [
+            'due_date' => [
                 'required',
-                'min:9',
-                'max:9',
-                Rule::unique('contacts')->ignore($contact_id),
+                'date:y-m-d H:i',
+            ],
+            'status' => [
+                'nullable',
+                Rule::in(collect(Task::$select_status)->keys()->all()),
+            ],
+            'priority' => [
+                'required',
+                Rule::in(collect(Task::$select_priority)->keys()->all()),
             ],
         ];
     }

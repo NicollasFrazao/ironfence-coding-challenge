@@ -50,8 +50,8 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function vouchers()
+    public function tasks()
     {
-        return $this->hasMany(Voucher::class);
+        return $this->hasMany(Task::class);
     }
 }

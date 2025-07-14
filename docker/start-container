@@ -9,6 +9,14 @@ if [ ! -z "$WWWUSER" ]; then
     usermod -u $WWWUSER sail
 fi
 
+echo "Corrigindo permissões da aplicação Laravel..."
+
+mkdir -p /var/www/html/storage/logs
+touch /var/www/html/storage/logs/laravel.log
+
+chown -R $WWWUSER:$WWWUSER /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 if [ ! -d /.composer ]; then
     mkdir /.composer
 fi

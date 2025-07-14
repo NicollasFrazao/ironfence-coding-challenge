@@ -30,6 +30,9 @@ Route::group(['middleware' => ['auth']], function ()
 
     Route::group(['prefix' => 'tasks'], function()
     {
+        Route::get('/', [App\Http\Controllers\TaskController::class, 'index'])->name('tasks.index');
+        Route::post('/', [App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');
         Route::get('/dashboard', [App\Http\Controllers\TaskController::class, 'dashboard'])->name('tasks.dashboard');
+        Route::get('/create', [App\Http\Controllers\TaskController::class, 'create'])->name('tasks.create');
     });
 });

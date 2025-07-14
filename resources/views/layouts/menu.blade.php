@@ -34,9 +34,9 @@
 
             <li class="nav-header">{{ __('GESTÃO') }}</li>
 
-            @if (Route::has('tasks.dashboard'))
+            @if (Route::has('tasks.index'))
                 <li class="nav-item">
-                    <a href="{{ route('tasks.dashboard') }}" class="nav-link {{ Route::is('tasks.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('tasks.index') }}" class="nav-link {{ Route::is(['tasks.index', 'tasks.dashboard', 'tasks.create']) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>{{ __('Tarefas') }}</p>
                     </a>
