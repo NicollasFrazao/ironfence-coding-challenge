@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () { return view('welcome'); })->name('index');
+Route::get('/', function () { return redirect()->route('home'); })->name('index');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*
@@ -28,9 +28,8 @@ Route::group(['middleware' => ['auth']], function ()
 {
     Route::get('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-    /*
-    Route::group(['prefix' => ''], function()
+    Route::group(['prefix' => 'tasks'], function()
     {
+        Route::get('/dashboard', [App\Http\Controllers\TaskController::class, 'dashboard'])->name('tasks.dashboard');
     });
-    */
 });
