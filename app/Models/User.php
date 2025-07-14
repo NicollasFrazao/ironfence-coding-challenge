@@ -42,4 +42,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // =========================================================================
+    // Relationships
+    // =========================================================================
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class);
+    }
 }
