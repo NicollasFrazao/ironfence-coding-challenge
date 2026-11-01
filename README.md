@@ -1,66 +1,86 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# IronFence Coding Challenge
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel 10 task manager with authentication, an AdminLTE interface and a kanban-style task dashboard.
 
-## About Laravel
+## Context
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Solution to the hiring challenge of IronFence (2025). The challenge statement is not included in this repository.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The work was done between 2025-07-13 and 2025-07-18 and stops at an early stage: tasks can be created, but the board does not display them yet (see Notes).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## What it does
 
-## Learning Laravel
+- **Authentication** with `laravel/ui`: login, registration, password reset and logout. Every task route requires an authenticated user.
+- **Tasks** (`tasks` table) belong to a user and have a description, a due date (`due_date`), a status (`pending`, `in_progress`, `completed`, or empty for Backlog) and a priority (`low`, `medium`, `high`).
+- **Create a task** (`GET /tasks/create`, `POST /tasks`): the form uses a date-time picker and select inputs. `TaskRequest` validates the input, the controller saves the task for the logged-in user inside a database transaction, and the result is shown as a flash message.
+- **Task dashboard** (`GET /tasks/dashboard`; `/`, `/home` and `/tasks` redirect to it): a kanban board with Backlog, pending, in progress and completed columns, built from the AdminLTE kanban layout.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The interface text is in Portuguese.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tech stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Versions are taken from `composer.lock` and `package-lock.json`.
 
-## Laravel Sponsors
+- PHP `^8.1` (the Docker image installs PHP 8.4)
+- Laravel Framework 10.48.29, Laravel Sanctum 3.3.3, Laravel UI 4.6.1
+- `laravelcollective/html` 6.4.1 (form helpers), `laracasts/flash` 3.2.4 (flash messages)
+- AdminLTE (committed under `public/dist` and `public/plugins`), with jQuery, Select2 and Tempus Dominus
+- Vite 5.4.19 with `laravel-vite-plugin` 1.3.0, Bootstrap 5.3.7, Sass 1.89.2
+- MySQL 8.0 and Redis through Laravel Sail 1.43.1 (Docker Compose, Ubuntu 24.04 base image, Node 22)
+- PHPUnit 10.5.48
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Running locally
 
-### Premium Partners
+Requirements: Docker with Docker Compose, plus Composer to install the PHP dependencies the first time (Sail lives in `vendor/`).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+cp .env.example .env
+composer install                      # or: make install
+make start                            # ./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
+make seed                             # migrate and seed
+```
 
-## Contributing
+The application listens on `http://localhost` (port `APP_PORT`, default 80). MySQL is forwarded to port 33066 (`FORWARD_DB_PORT`).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+When the `application` container starts, supervisord runs `docker/setup-container`, which runs the migrations, `npm install` and `npm run dev` (Vite dev server on port 5173).
 
-## Code of Conduct
+`DatabaseSeeder` creates one user; you can also create an account at `/register`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Other Makefile targets: `build`, `up`, `down`, `stop`, `restart`, `sh` (shell in the application container), `sh:mysql` (MySQL client), `migrate`, `npm` and `test`.
 
-## Security Vulnerabilities
+## Tests
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+make test                             # ./vendor/bin/sail test
+```
 
-## License
+The suite contains only the two example tests that ship with Laravel. Run on 2026-11-01 with PHP 8.3 in Docker (`php:8.3-cli`, after `composer install` and `php artisan key:generate`):
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `Tests\Unit\ExampleTest` passes.
+- `Tests\Feature\ExampleTest` fails: it expects `GET /` to return 200, but `/` now redirects to `/home` (302).
+
+Result: 1 passed, 1 failed. There are no tests for the task features.
+
+## Project structure
+
+```
+app/Http/Controllers/TaskController.php   dashboard, create and store actions
+app/Http/Requests/TaskRequest.php         validation of task input
+app/Models/Task.php                       Task model, status and priority options
+app/Models/User.php                       User model with the tasks() relation
+database/migrations/                      Laravel defaults plus create_tasks_table
+database/seeders/DatabaseSeeder.php       first user
+resources/views/tasks/                    dashboard (kanban), create form, fields
+resources/views/layouts/                  AdminLTE layout, navbar, sidebar, menu
+routes/web.php                            auth routes and the /tasks group
+docker/                                   Sail-based Dockerfile, supervisord and startup scripts
+Makefile                                  shortcuts around Sail
+```
+
+## Notes
+
+- The kanban columns contain the static example cards from the AdminLTE template. They are not loaded from the `tasks` table, so a created task is saved but does not appear on the board.
+- There is no listing, editing, moving or deleting of tasks yet.
+- `TaskRequest` applies the rule `date:y-m-d H:i` to `due_date`. Laravel's `date` rule ignores parameters, so the format is not enforced; `date_format` would enforce it.
+- `routes/api.php` keeps only the default Sanctum `/user` route; the application has no API of its own.
