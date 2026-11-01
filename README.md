@@ -4,7 +4,7 @@ A Laravel 10 task manager with authentication, an AdminLTE interface and a kanba
 
 ## Context
 
-Solution to the hiring challenge of IronFence (2025). The challenge statement is not included in this repository.
+Solution to the hiring challenge of IronFence (2025). The challenge statement is kept in [`challenge.pdf`](challenge.pdf) (in Portuguese), with the recruiters' e-mail addresses removed.
 
 The work was done between 2025-07-13 and 2025-07-18 and stops at an early stage: tasks can be created, but the board does not display them yet (see Notes).
 
